@@ -1,10 +1,10 @@
-#1
+
 import pygame
 from pygame.locals import *
 import math
 import random 
 
-#2 initialise
+#initialise
 pygame.init()
 width, height = 640, 480
 screen = pygame.display.set_mode((width, height))
@@ -18,7 +18,7 @@ badguys = [[640, 100]]
 healthvalue = 194
 pygame.display.set_caption("Aliens")
 
-#3 load images
+#load images
 player = pygame.image.load("resources/images/alien1.png")
 grass = pygame.image.load("resources/images/space.png")
 castle = pygame.image.load("resources/images/planet.png")
@@ -30,14 +30,14 @@ health = pygame.image.load("resources/images/health.png")
 gameover = pygame.image.load("resources/images/gameover.png")
 youwin = pygame.image.load("resources/images/youwin.png")
 
-#4 loop
+#loop
 running = 1
 exitcode = 0
 while running:
     badtimer -= 1
-    #5-clear screen
+    #clear screen
     screen.fill(0)
-    #6-draw elements
+    #draw elements
     for x in range(width//grass.get_width()+1):
         for y in range(height//grass.get_height()+1):
             screen.blit(grass,(x*100,y*100))
@@ -45,13 +45,13 @@ while running:
     screen.blit(castle,(0,135))
     screen.blit(castle,(0,240))
     screen.blit(castle,(0,345 ))
-    #6.1 player position + rotation
+    #player position + rotation
     position = pygame.mouse.get_pos()
     angle = math.atan2(position[1]-(playerpos[1]+32),position[0]-(playerpos[0]+26))
     playerrot = pygame.transform.rotate(player, 360-angle*57.29)
     playerpos1 = (playerpos[0]-playerrot.get_rect().width/2, playerpos[1]-playerrot.get_rect().height/2)
     screen.blit(playerrot, playerpos1)
-    #6.2 - Draw arows
+    #Draw bullets
     for bullet in arrows:
         index = 0
         velx=math.cos(bullet[0])*10
@@ -64,7 +64,7 @@ while running:
         for projectile in arrows:
             arrow1 = pygame.transform.rotate(arrow, 360-projectile[0]*57.29)
             screen.blit(arrow1, (projectile[1], projectile[2]))
-    #6.3 draw badgers
+    #draw bad guys
     if badtimer==0:
             badguys.append([640, random.randint(50,430)])
             badtimer=100-(badtimer1*2)
@@ -77,7 +77,7 @@ while running:
         if badguy[0]<-64:
             badguys.pop(index)
         badguy[0]-=7
-        #6.3.1 - Attack castle
+        #6.3.1 - Attack planets
         badrect = pygame.Rect(badguyimg.get_rect())
         badrect.top = badguy[1]
         badrect.left=badguy[0]
