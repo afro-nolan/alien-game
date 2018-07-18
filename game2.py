@@ -34,10 +34,40 @@ youwin = pygame.image.load("resources/images/youwin.png")
 #loop
 running = 1
 exitcode = 0
+
+#Start Screen
+black=(0,0,0)
+end_it=False
+while (end_it==False):
+    screen.fill(black)
+    myfont2 = pygame.font.SysFont("Britannic Bold", 64)
+    myfont=pygame.font.SysFont("Comic Sans MS", 40)
+    myfont1 = pygame.font.SysFont("Comic Sans MS", 24)
+    name = myfont2.render("Defeat The Aliens", 1, (255,0,0))
+    play_label = myfont1.render("Click to play!", 1, (255, 0, 0))
+    rule1 = myfont1.render("W: Up", 24, (255,0,0))
+    rule2 = myfont1.render("D: Right", 24, (255,0,0))
+    rule3 = myfont1.render("S: Down", 24, (255,0,0))
+    rule4 = myfont1.render("A: Left", 24, (255,0,0))
+    rule5 = myfont1.render("Right Click: Shoot", 24, (255,0,0))
+    
+    for event in pygame.event.get():
+        if event.type==MOUSEBUTTONDOWN:
+            end_it=True
+    screen.blit(name, (200, 100))
+    screen.blit(play_label,(200,200))
+    screen.blit(rule1, (200, 240))
+    screen.blit(rule2, (200, 260))
+    screen.blit(rule3, (200, 280))
+    screen.blit(rule4, (200, 300))
+    screen.blit(rule5, (200, 320))
+    pygame.display.flip()
 while running:
     badtimer -= 1
+    
     #clear screen
     screen.fill(0)
+    
     #draw elements
     for x in range(width//grass.get_width()+1):
         for y in range(height//grass.get_height()+1):
@@ -46,12 +76,14 @@ while running:
     screen.blit(castle,(0,135))
     screen.blit(castle,(0,240))
     screen.blit(castle,(0,345 ))
+    
     #player position + rotation
     position = pygame.mouse.get_pos()
     angle = math.atan2(position[1]-(playerpos[1]+32),position[0]-(playerpos[0]+26))
     playerrot = pygame.transform.rotate(player, 360-angle*57.29)
     playerpos1 = (playerpos[0]-playerrot.get_rect().width/2, playerpos[1]-playerrot.get_rect().height/2)
     screen.blit(playerrot, playerpos1)
+    
     #Draw bullets
     for bullet in arrows:
         index = 0
@@ -65,6 +97,7 @@ while running:
         for projectile in arrows:
             arrow1 = pygame.transform.rotate(arrow, 360-projectile[0]*57.29)
             screen.blit(arrow1, (projectile[1], projectile[2]))
+            
     #draw bad guys
     if badtimer==0:
             badguys.append([640, random.randint(50,430)])
@@ -78,14 +111,14 @@ while running:
         if badguy[0]<-64:
             badguys.pop(index)
         badguy[0]-=7
-        #6.3.1 - Attack planets
+        #Attack planets
         badrect = pygame.Rect(badguyimg.get_rect())
         badrect.top = badguy[1]
         badrect.left=badguy[0]
         if badrect.left<64:
             healthvalue -= random.randint(5,20)
             badguys.pop(index)
-        #6.3.2 - Check for collisions
+        #Check for collisions
         index1=0
         for bullet in arrows:
             bullrect=pygame.Rect(arrow.get_rect())
@@ -97,18 +130,18 @@ while running:
                 badguys.pop(index)
                 arrows.pop(index1)
             index1 += 1
-        # 6.3.3 - Next bad guy
+        #Next bad guy
         index+=1
     for badguy in badguys:
         screen.blit(badguyimg, badguy)
-    #6.4 - Draw clock
+    #Draw clock
     font = pygame.font.Font(None, 24)
     survivedtext = font.render(str((90000-pygame.time.get_ticks())//60000)+":"+str((90000-pygame.time.get_ticks())//1000%60).zfill(2), True, (200,000,000))
     textRect = survivedtext.get_rect()
     textRect.topright=[635,5]
     screen.blit(survivedtext, textRect)
     
-    #6.5 - Draw health bar
+    #Draw health bar
     screen.blit(healthbar, (5,5))
     for health1 in range(healthvalue):
         screen.blit(health, (health1+8,8))
@@ -120,9 +153,9 @@ while running:
     textsurface = myfont.render(text, False, (200,000,000))
     screen.blit(textsurface,(500, 450))
         
-    #7- update screen
+    #update screen
     pygame.display.flip()
-    #8 -loop events
+    #loop events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -150,7 +183,7 @@ while running:
             acc[1]+=1
             arrows.append([math.atan2(position[1]-(playerpos1[1]+32),position[0]-(playerpos1[0]+26)),playerpos1[0]+32,playerpos1[1]+32])
             
-    #9- move player
+    #move player
     if keys[0]:
         playerpos[1]-=5
     elif keys[2]:
@@ -159,7 +192,7 @@ while running:
         playerpos[0]-=5
     elif keys[3]:
         playerpos[0]+=5
-    #10 - Win/lose check
+    #Win/lose check
     if pygame.time.get_ticks()>=90000:
                running = 0
                exitcode = 1
@@ -171,7 +204,7 @@ while running:
     else:
         accuracy=0
 
-#11 - Win/lose display
+#Win/lose display
 if exitcode==0:
      pygame.font.init()
      font = pygame.font.Font(None, 24)
