@@ -17,6 +17,7 @@ badtimer1 = 0
 badguys = [[640, 100]]
 healthvalue = 194
 pygame.display.set_caption("Aliens")
+kill_score = 0
 
 #load images
 player = pygame.image.load("resources/images/alien1.png")
@@ -92,6 +93,7 @@ while running:
             bullrect.top=bullet[2]
             if badrect.colliderect(bullrect):
                 acc[0]+=1
+                kill_score += 1
                 badguys.pop(index)
                 arrows.pop(index1)
             index1 += 1
@@ -101,14 +103,23 @@ while running:
         screen.blit(badguyimg, badguy)
     #6.4 - Draw clock
     font = pygame.font.Font(None, 24)
-    survivedtext = font.render(str((90000-pygame.time.get_ticks())//60000)+":"+str((90000-pygame.time.get_ticks())//1000%60).zfill(2), True, (0,0,0))
+    survivedtext = font.render(str((90000-pygame.time.get_ticks())//60000)+":"+str((90000-pygame.time.get_ticks())//1000%60).zfill(2), True, (200,000,000))
     textRect = survivedtext.get_rect()
     textRect.topright=[635,5]
     screen.blit(survivedtext, textRect)
+    
     #6.5 - Draw health bar
     screen.blit(healthbar, (5,5))
     for health1 in range(healthvalue):
         screen.blit(health, (health1+8,8))
+        
+    #Draw kill Score
+    pygame.font.init()
+    myfont = pygame.font.SysFont('Comic Sans MS', 30)
+    text = "Kill Score: " + str(kill_score)
+    textsurface = myfont.render(text, False, (200,000,000))
+    screen.blit(textsurface,(500, 450))
+        
     #7- update screen
     pygame.display.flip()
     #8 -loop events
@@ -164,16 +175,19 @@ while running:
 if exitcode==0:
      pygame.font.init()
      font = pygame.font.Font(None, 24)
-     text = font.render("Accuracy: "+str(accuracy)+"%", True, (255,0,0))
+     output_accuracy = "{:.2f}".format(accuracy)
+     text = font.render("Accuracy: "+str(output_accuracy)+"%", True, (255,0,0))
      textRect = text.get_rect()
      textRect.centerx = screen.get_rect().centerx
      textRect.centery = screen.get_rect().centery+24
      screen.blit(gameover, (0,0))
      screen.blit(text, textRect)
+        
 else:
     pygame.font.init()
     font = pygame.font.Font(None, 24)
-    text = font.render("Accuracy: "+str(accuracy)+"%", True, (0,255,0))
+    output_accuracy = "{:.2f}".format(accuracy)
+    text = font.render("Accuracy: "+str(output_accuracy)+"%", True, (0,255,0))
     textRect = text.get_rect()
     textRect.centerx = screen.get_rect().centerx
     textRect.centery = screen.get_rect().centery+24
